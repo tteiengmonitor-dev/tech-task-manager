@@ -12,7 +12,6 @@
     --card:#1e2e34;
     --accent:#d4a373;
     --text:#f1f1f1;
-    --muted:#9fb3b8;
     --border:#35565f;
 }
 
@@ -31,130 +30,122 @@ body{
     width:100%;
     max-width:850px;
     background:var(--card);
-    padding:35px;
-    border-radius:20px;
+    padding:28px;
+    border-radius:18px;
     box-shadow:0 15px 40px rgba(0,0,0,0.4);
     color:var(--text);
 }
 
 h1{
     margin-top:0;
+    margin-bottom:18px;
     color:var(--accent);
 }
 
 label{
-    margin-top:14px;
+    margin-top:12px;
     display:block;
     font-weight:600;
+    font-size:14px;
 }
 
 input, textarea{
     width:100%;
-    padding:10px;
-    margin-top:6px;
-    border-radius:10px;
+    padding:9px 10px;
+    margin-top:5px;
+    border-radius:8px;
     border:1px solid var(--border);
     background:#142328;
     color:var(--text);
     font-size:14px;
+    box-sizing:border-box;
 }
 
 textarea{
     resize:vertical;
-    min-height:70px;
+    min-height:65px;
 }
 
 .time-row{
-    display:flex;
-    gap:16px;
-    margin-top:10px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:8px;
 }
 
-.time-col{
-    flex:0 0 50%;
-}
-
-/* ถ้าจอเล็กกว่า 600px ค่อยลงบรรทัด */
 @media(max-width:600px){
     .time-row{
-        flex-direction:column;
+        grid-template-columns:1fr;
     }
+}
 
-    .time-col{
-        flex:1 1 100%;
-    }
+input[type="time"]{
+    appearance:none;
+    -webkit-appearance:none;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+    filter:invert(1);
+    opacity:0.6;
 }
 
 .checkbox-box{
-    margin-top:10px;
+    margin-top:8px;
     border:1px solid var(--border);
-    padding:12px 16px;
-    border-radius:12px;
+    padding:10px 14px;
+    border-radius:10px;
     background:#142328;
 }
 
 .checkbox-item{
     display:flex;
     align-items:center;
-    gap:10px;
-    padding:6px 0;
+    gap:8px;
+    padding:4px 0;
     cursor:pointer;
-    font-weight:500;
 }
 
 .checkbox-item input{
     width:16px;
     height:16px;
-    accent-color: var(--accent);
-    cursor:pointer;
+    accent-color:var(--accent);
 }
 
 .checkbox-item:hover{
     color:var(--accent);
 }
 
-.checkbox-box label{
-    display:block;
-    margin-bottom:8px;
-    font-weight:500;
-}
-
 button{
-    margin-top:10px;
-    padding:8px 14px;
+    margin-top:6px;
+    padding:6px 12px;
     border:none;
-    border-radius:8px;
+    border-radius:6px;
     cursor:pointer;
 }
 
 .btn-small{
     background:#2b444c;
     color:var(--text);
+    margin-right:6px;
 }
 
 .submit{
     width:100%;
-    padding:15px;
-    margin-top:30px;
+    padding:12px;
+    margin-top:22px;
     background:var(--accent);
     color:#000;
     font-weight:bold;
-    font-size:16px;
+    font-size:15px;
 }
 
 .summary{
-    margin-top:30px;
-    padding:18px;
+    margin-top:18px;
+    padding:14px;
     background:#142328;
-    border-radius:12px;
-    font-size:14px;
+    border-radius:10px;
+    font-size:13px;
     line-height:1.6;
-}
-
-@media(max-width:600px){
-    .time-row{
-        flex-direction:column;
-    }
 }
 </style>
 </head>
@@ -177,41 +168,22 @@ button{
 
 <label>เลือกพนักงาน</label>
 <div class="checkbox-box">
-
-<label class="checkbox-item">
-<input type="checkbox" value="Emp_01">
-<span>Emp_01</span>
-</label>
-
-<label class="checkbox-item">
-<input type="checkbox" value="Emp_02">
-<span>Emp_02</span>
-</label>
-
-<label class="checkbox-item">
-<input type="checkbox" value="Emp_03_LongNameTest">
-<span>Emp_03_LongNameTest</span>
-</label>
-
-<label class="checkbox-item">
-<input type="checkbox" value="Emp_04">
-<span>Emp_04</span>
-</label>
-
+<label class="checkbox-item"><input type="checkbox" value="Emp_01"><span>Emp_01</span></label>
+<label class="checkbox-item"><input type="checkbox" value="Emp_02"><span>Emp_02</span></label>
+<label class="checkbox-item"><input type="checkbox" value="Emp_03_LongNameTest"><span>Emp_03_LongNameTest</span></label>
+<label class="checkbox-item"><input type="checkbox" value="Emp_04"><span>Emp_04</span></label>
 </div>
 
 <div class="time-row">
-
-<div class="time-col">
+<div>
 <label>เวลาเริ่มงาน</label>
 <input type="time" id="startTime">
 </div>
 
-<div class="time-col">
+<div>
 <label>เวลาคาดว่าจะเสร็จ</label>
 <input type="time" id="endTime">
 </div>
-
 </div>
 
 <label>ระยะเวลาทำงาน (ชั่วโมง)</label>
@@ -229,7 +201,7 @@ button{
 let lastChanged=null;
 
 window.onload=function(){
-    setTomorrow(); // default พรุ่งนี้
+    setTomorrow();
 }
 
 function setToday(){
@@ -300,15 +272,13 @@ document.getElementById("endTime").addEventListener("input",()=>{
     lastChanged="end";
     recalc();
 });
-document.getElementById("startTime").addEventListener("input",()=>{
-    recalc();
-});
+document.getElementById("startTime").addEventListener("input",recalc);
+document.getElementById("jobRef").addEventListener("input",updateSummary);
+document.getElementById("jobDetail").addEventListener("input",updateSummary);
+document.getElementById("planDate").addEventListener("input",updateSummary);
 document.querySelectorAll(".checkbox-box input").forEach(cb=>{
     cb.addEventListener("change",updateSummary);
 });
-document.getElementById("jobRef").addEventListener("input",updateSummary);
-document.getElementById("planDate").addEventListener("input",updateSummary);
-document.getElementById("jobDetail").addEventListener("input",updateSummary);
 
 function submitPlan(){
     alert("ส่งแผนเรียบร้อย (Demo Mode)");
