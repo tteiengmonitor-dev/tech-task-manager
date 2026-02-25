@@ -155,7 +155,7 @@ button{
 <div class="container">
 <h1>🔧 Technician Work Planner</h1>
 
-<label>Job Reference Number</label>
+<label>Job Number</label>
 <input type="text" id="jobRef">
 
 <label>รายละเอียดงาน</label>
@@ -176,7 +176,7 @@ button{
 
 <div class="time-row">
 <div>
-<label>เวลาเริ่มงาน</label>
+<label>เวลาคาดว่าจะเริ่มงาน</label>
 <input type="time" id="startTime">
 </div>
 
@@ -255,13 +255,13 @@ function updateSummary(){
         .map(el=>el.value);
 
     document.getElementById("summary").innerHTML=
-    `<b>Job:</b> ${job||'-'}<br>
-     <b>Detail:</b> ${detail||'-'}<br>
-     <b>Date:</b> ${date||'-'}<br>
-     <b>Start:</b> ${start||'-'}<br>
-     <b>End:</b> ${end||'-'}<br>
-     <b>Duration:</b> ${duration||'-'} ชั่วโมง<br>
-     <b>Technician:</b> ${checked.length?checked.join(", "):'-'}`;
+    `<b>Job Number:</b> ${job||'-'}<br>
+     <b>รายละเอียดงาน:</b> ${detail||'-'}<br>
+     <b>วันที่ทำงาน:</b> ${date||'-'}<br>
+     <b>เวลาที่คาดว่าจะเริ่ม:</b> ${start||'-'}<br>
+     <b>เวลาที่คาดว่าจะเสร็จ:</b> ${end||'-'}<br>
+     <b>ระยะเวลาการทำงาน:</b> ${duration||'-'} ชั่วโมง<br>
+     <b>รายชื่อผู้ปฏิบัติงาน:</b> ${checked.length?checked.join(", "):'-'}`;
 }
 
 document.getElementById("duration").addEventListener("input",()=>{
