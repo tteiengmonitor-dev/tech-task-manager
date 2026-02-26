@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Technician Work Planner</title>
+<title>Planner Panel</title>
 
 <style>
 :root{
@@ -17,41 +17,37 @@
 
 body{
     margin:0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family:'Segoe UI',sans-serif;
     background:linear-gradient(135deg,var(--bg1),var(--bg2));
     display:flex;
     justify-content:center;
     align-items:center;
     min-height:100vh;
     padding:20px;
+    color:var(--text);
 }
 
 .container{
     width:100%;
-    max-width:850px;
+    max-width:900px;
     background:var(--card);
     padding:28px;
-    border-radius:18px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.4);
-    color:var(--text);
+    border-radius:12px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.4);
 }
 
-h1{
-    margin-top:0;
-    margin-bottom:18px;
-    color:var(--accent);
-}
+h1{ color:var(--accent); margin-top:0; }
 
 label{
-    margin-top:12px;
     display:block;
+    margin-top:14px;
     font-weight:600;
-    font-size:14px;
+    font-size:13px;
 }
 
 input, textarea{
     width:100%;
-    padding:9px 10px;
+    padding:8px;
     margin-top:5px;
     border-radius:8px;
     border:1px solid var(--border);
@@ -61,83 +57,75 @@ input, textarea{
     box-sizing:border-box;
 }
 
-textarea{
-    resize:vertical;
-    min-height:65px;
-}
+textarea{ resize:vertical; min-height:60px; }
 
-.time-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
-    margin-top:8px;
-}
-
-@media(max-width:600px){
-    .time-row{
-        grid-template-columns:1fr;
-    }
-}
-
+input[type="date"],
 input[type="time"]{
-    appearance:none;
-    -webkit-appearance:none;
+    color-scheme: dark;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator{
-    filter:invert(1);
-    opacity:0.6;
+    filter: invert(1);
+    opacity:0.9;
+    cursor:pointer;
 }
+
+button{
+    margin-top:10px;
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{ background:var(--accent); color:#000; }
+.small{ background:#2b444c; color:#fff; margin-right:6px; }
+.logout{ float:right; background:#444; color:#fff; }
 
 .checkbox-box{
-    margin-top:8px;
+    margin-top:10px;
+    padding:12px 16px;
     border:1px solid var(--border);
-    padding:10px 14px;
     border-radius:10px;
     background:#142328;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
 
 .checkbox-item{
     display:flex;
     align-items:center;
-    gap:8px;
-    padding:4px 0;
-    cursor:pointer;
+    gap:10px;
 }
 
 .checkbox-item input{
+    accent-color:var(--accent);
     width:16px;
     height:16px;
-    accent-color:var(--accent);
 }
 
-.checkbox-item:hover{
-    color:var(--accent);
+.time-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:12px;
 }
 
-button{
-    margin-top:6px;
-    padding:6px 12px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
+.time-row > div{
+    display:flex;
+    flex-direction:column;
 }
 
-.btn-small{
-    background:#2b444c;
-    color:var(--text);
-    margin-right:6px;
+@media(max-width:768px){
+    .time-row{
+        grid-template-columns:1fr;
+    }
 }
 
-.submit{
-    width:100%;
-    padding:12px;
-    margin-top:22px;
-    background:var(--accent);
-    color:#000;
-    font-weight:bold;
-    font-size:15px;
-}
+.hidden{ display:none; }
 
 .summary{
     margin-top:18px;
@@ -153,9 +141,25 @@ button{
 <body>
 
 <div class="container">
-<h1>🔧 Technician Work Planner</h1>
 
-<label>Job Number</label>
+<h1>🔐 Login</h1>
+
+<div id="loginBox">
+  <label>Employee ID</label>
+  <input type="text" id="empId">
+
+  <label>Password</label>
+  <input type="password" id="password">
+
+  <button class="primary" onclick="login()">Login</button>
+</div>
+
+<div id="plannerSystem" class="hidden">
+
+<button class="logout" onclick="logout()">Logout</button>
+<h1>🔧 Planner Panel</h1>
+
+<label>Job Reference</label>
 <input type="text" id="jobRef">
 
 <label>รายละเอียดงาน</label>
@@ -163,126 +167,247 @@ button{
 
 <label>วันที่ทำงาน</label>
 <input type="date" id="planDate">
-<button class="btn-small" onclick="setToday()">วันนี้</button>
-<button class="btn-small" onclick="setTomorrow()">พรุ่งนี้</button>
+<button class="small" onclick="setToday()">วันนี้</button>
+<button class="small" onclick="setTomorrow()">พรุ่งนี้</button>
 
 <label>เลือกพนักงาน</label>
-<div class="checkbox-box">
-<label class="checkbox-item"><input type="checkbox" value="กิตติพงศ์ ศรีสุวรรณ"><span>กิตติพงศ์ ศรีสุวรรณ</span></label>
-<label class="checkbox-item"><input type="checkbox" value="ธนวัฒน์ รัตนชัย"><span>ธนวัฒน์ รัตนชัย</span></label>
-<label class="checkbox-item"><input type="checkbox" value="ภาคิน วัฒนากุล"><span>ภาคิน วัฒนากุล</span></label>
-<label class="checkbox-item"><input type="checkbox" value="ศุภกร นิลประเสริฐ"><span>ศุภกร นิลประเสริฐ</span></label>
+<div class="checkbox-box" id="techBox">
+  Loading...
 </div>
 
 <div class="time-row">
-<div>
-<label>เวลาคาดว่าจะเริ่มงาน</label>
-<input type="time" id="startTime">
+  <div>
+    <label>เวลาเริ่มงาน</label>
+    <input type="time" id="startTime">
+  </div>
+  <div>
+    <label>เวลาคาดว่าจะเสร็จ</label>
+    <input type="time" id="endTime">
+  </div>
 </div>
 
-<div>
-<label>เวลาคาดว่าจะเสร็จ</label>
-<input type="time" id="endTime">
-</div>
-</div>
-
-<label>ระยะเวลาทำงาน (ชั่วโมง)</label>
+<label>Duration (hr)</label>
 <input type="number" id="duration" step="0.25">
 
 <div class="summary" id="summary">
 รอกรอกข้อมูล...
 </div>
 
-<button class="submit" onclick="submitPlan()">ส่งแผน</button>
+<button class="primary" onclick="submitPlan()">ส่งแผน</button>
 
+</div>
 </div>
 
 <script>
+
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyYSSyAy8xQa5jINo-A7YHEPJY3DgRWeeB3C1lVmKwZKdgYJ-YESOP69CWCEmIrgBvmdQ/exec";
+
 let lastChanged=null;
 
-window.onload=function(){
-    setTomorrow();
+// ================= INIT =================
+window.onload = () => {
+
+  const empId = sessionStorage.getItem("empId");
+  const role = sessionStorage.getItem("role");
+
+  if(empId && role === "planner"){
+    showPlanner();
+  }
+
+  setTomorrow();
+};
+
+// ================= LOGIN =================
+function login(){
+
+  fetch(WEBAPP_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"login",
+      empId:document.getElementById("empId").value,
+      password:document.getElementById("password").value
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.status==="success"){
+      if(data.role !== "planner"){
+        alert("คุณไม่มีสิทธิ์เข้า Planner");
+        return;
+      }
+
+      sessionStorage.setItem("empId",data.empId);
+      sessionStorage.setItem("role",data.role);
+      showPlanner();
+    }else{
+      alert("Login Failed");
+    }
+  });
 }
 
+function showPlanner(){
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("plannerSystem").classList.remove("hidden");
+  loadAssignable();
+}
+
+function logout(){
+  sessionStorage.clear();
+  location.reload();
+}
+
+// ================= DATE =================
 function setToday(){
-    const today=new Date().toISOString().split("T")[0];
-    document.getElementById("planDate").value=today;
+  const today=new Date().toISOString().split("T")[0];
+  document.getElementById("planDate").value=today;
+  updateSummary();
 }
 
 function setTomorrow(){
-    const d=new Date();
-    d.setDate(d.getDate()+1);
-    document.getElementById("planDate").value=d.toISOString().split("T")[0];
+  const d=new Date();
+  d.setDate(d.getDate()+1);
+  document.getElementById("planDate").value=d.toISOString().split("T")[0];
+  updateSummary();
 }
 
+// ================= TIME CALC =================
 function timeToMin(t){
-    const [h,m]=t.split(":").map(Number);
-    return h*60+m;
+  if(!t) return 0;
+  const [h,m]=t.split(":").map(Number);
+  return h*60+m;
 }
 
 function minToTime(min){
-    const h=Math.floor(min/60);
-    const m=min%60;
-    return String(h).padStart(2,'0')+":"+String(m).padStart(2,'0');
+  const h=Math.floor(min/60);
+  const m=min%60;
+  return String(h).padStart(2,'0')+":"+String(m).padStart(2,'0');
 }
 
 function recalc(){
-    const start=document.getElementById("startTime").value;
-    const duration=parseFloat(document.getElementById("duration").value);
-    const end=document.getElementById("endTime").value;
 
-    if(start){
-        if(lastChanged==="duration" && duration){
-            document.getElementById("endTime").value=minToTime(timeToMin(start)+duration*60);
-        }
-        else if(lastChanged==="end" && end){
-            const diff=timeToMin(end)-timeToMin(start);
-            document.getElementById("duration").value=(diff/60).toFixed(2);
-        }
+  const start=document.getElementById("startTime").value;
+  const duration=parseFloat(document.getElementById("duration").value);
+  const end=document.getElementById("endTime").value;
+
+  if(start){
+    if(lastChanged==="duration" && duration){
+      document.getElementById("endTime").value=
+        minToTime(timeToMin(start)+duration*60);
     }
-    updateSummary();
-}
+    else if(lastChanged==="end" && end){
+      const diff=timeToMin(end)-timeToMin(start);
+      document.getElementById("duration").value=(diff/60).toFixed(2);
+    }
+  }
 
-function updateSummary(){
-    const job=document.getElementById("jobRef").value;
-    const detail=document.getElementById("jobDetail").value;
-    const date=document.getElementById("planDate").value;
-    const start=document.getElementById("startTime").value;
-    const end=document.getElementById("endTime").value;
-    const duration=document.getElementById("duration").value;
-
-    const checked=[...document.querySelectorAll(".checkbox-box input:checked")]
-        .map(el=>el.value);
-
-    document.getElementById("summary").innerHTML=
-    `<b>Job Number:</b> ${job||'-'}<br>
-     <b>รายละเอียดงาน:</b> ${detail||'-'}<br>
-     <b>วันที่ทำงาน:</b> ${date||'-'}<br>
-     <b>เวลาที่คาดว่าจะเริ่ม:</b> ${start||'-'}<br>
-     <b>เวลาที่คาดว่าจะเสร็จ:</b> ${end||'-'}<br>
-     <b>ระยะเวลาการทำงาน:</b> ${duration||'-'} ชั่วโมง<br>
-     <b>รายชื่อผู้ปฏิบัติงาน:</b> ${checked.length?checked.join(", "):'-'}`;
+  updateSummary();
 }
 
 document.getElementById("duration").addEventListener("input",()=>{
-    lastChanged="duration";
-    recalc();
+  lastChanged="duration";
+  recalc();
 });
 document.getElementById("endTime").addEventListener("input",()=>{
-    lastChanged="end";
-    recalc();
+  lastChanged="end";
+  recalc();
 });
 document.getElementById("startTime").addEventListener("input",recalc);
+
+// ================= LOAD TECH =================
+function loadAssignable(){
+
+  const empId = sessionStorage.getItem("empId");
+
+  fetch(`${WEBAPP_URL}?action=getAssignable&plannerId=${empId}`)
+  .then(res=>res.json())
+  .then(data=>{
+
+    const box = document.getElementById("techBox");
+    box.innerHTML="";
+
+    if(data.length === 0){
+      box.innerHTML="ไม่มี technician ที่ assign ได้";
+      return;
+    }
+
+    data.forEach(emp=>{
+      box.innerHTML+=`
+        <label class="checkbox-item">
+          <input type="checkbox" value="${emp.empId}">
+          ${emp.name}
+        </label>
+      `;
+    });
+
+    document.querySelectorAll("#techBox input")
+      .forEach(cb=>cb.addEventListener("change",updateSummary));
+  });
+}
+
+// ================= SUMMARY =================
+function updateSummary(){
+
+  const job=document.getElementById("jobRef").value;
+  const detail=document.getElementById("jobDetail").value;
+  const date=document.getElementById("planDate").value;
+  const start=document.getElementById("startTime").value;
+  const end=document.getElementById("endTime").value;
+  const duration=document.getElementById("duration").value;
+
+  const checked=[...document.querySelectorAll("#techBox input:checked")]
+      .map(el=>el.value);
+
+  document.getElementById("summary").innerHTML=
+  `<b>Job:</b> ${job||'-'}<br>
+   <b>Detail:</b> ${detail||'-'}<br>
+   <b>Date:</b> ${date||'-'}<br>
+   <b>Start:</b> ${start||'-'}<br>
+   <b>End:</b> ${end||'-'}<br>
+   <b>Duration:</b> ${duration||'-'} hr<br>
+   <b>Technician:</b> ${checked.length?checked.join(", "):'-'}`;
+}
+
 document.getElementById("jobRef").addEventListener("input",updateSummary);
 document.getElementById("jobDetail").addEventListener("input",updateSummary);
 document.getElementById("planDate").addEventListener("input",updateSummary);
-document.querySelectorAll(".checkbox-box input").forEach(cb=>{
-    cb.addEventListener("change",updateSummary);
-});
 
+// ================= CREATE TASK =================
 function submitPlan(){
-    alert("ส่งแผนเรียบร้อย (Demo Mode)");
+
+  const selectedEmp =
+    [...document.querySelectorAll("#techBox input:checked")]
+    .map(el=>el.value)
+    .join(",");
+
+  if(!selectedEmp){
+    alert("กรุณาเลือก Technician");
+    return;
+  }
+
+  fetch(WEBAPP_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"createTask",
+      empId:sessionStorage.getItem("empId"),
+      jobRef:document.getElementById("jobRef").value,
+      detail:document.getElementById("jobDetail").value,
+      planDate:document.getElementById("planDate").value,
+      startPlan:document.getElementById("startTime").value,
+      endPlan:document.getElementById("endTime").value,
+      durationPlan:document.getElementById("duration").value,
+      assignedEmp:selectedEmp
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.error){
+      alert(data.error);
+      return;
+    }
+    alert("Task Created: " + data.taskId);
+  });
 }
+
 </script>
 
 </body>
