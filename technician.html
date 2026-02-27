@@ -6,226 +6,248 @@
 <title>Technician Panel</title>
 
 <style>
-:root{
-    --bg1:#0f2027;
-    --bg2:#203a43;
-    --card:#1e2e34;
-    --accent:#d4a373;
-    --danger:#c44536;
-    --text:#f1f1f1;
-    --border:#35565f;
-}
-
 body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:linear-gradient(135deg,var(--bg1),var(--bg2));
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    padding:20px;
-    color:var(--text);
+  margin:0;
+  font-family:Segoe UI,sans-serif;
+  background:#0f2027;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  padding:30px;
 }
-
 .container{
-    width:100%;
-    max-width:850px;
-    background:var(--card);
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+  width:100%;
+  max-width:800px;
+  background:#1e2e34;
+  padding:25px;
+  border-radius:15px;
 }
-
-h1{
-    margin-top:0;
-    color:var(--accent);
+input[type="text"],
+input[type="password"]{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:1px solid #35565f;
+  background:#142328;
+  color:#fff;
 }
-
-input{
-    width:100%;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:#142328;
-    color:var(--text);
-}
-
-.header{
-    margin-top:15px;
-    padding:12px;
-    background:#142328;
-    border-radius:10px;
-    border:1px solid var(--border);
-    font-size:14px;
-}
-
-.task-list{
-    margin-top:15px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    background:#142328;
-    padding:10px 15px;
-}
-
-.task-item{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:6px 0;
-}
-
-.task-item input{
-    width:16px;
-    height:16px;
-    accent-color:var(--accent);
-}
-
 button{
-    width:100%;
-    margin-top:15px;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:8px;
+}
+.start{background:#d4a373;color:#000;}
+.stop{background:#f1c40f;color:#000;}
+.complete{background:#2ecc71;color:#000;}
+.logout{background:#c44536;color:#fff;}
+.task-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-.start{
-    background:var(--accent);
-    color:#000;
+.task-item input[type="radio"]{
+  margin:0;
 }
 
-.end{
-    background:#35565f;
-    color:#fff;
+.task-item label{
+  margin:0;
 }
 
-.urgent{
-    background:var(--danger);
-    color:#fff;
-}
-
-.timer-box{
-    margin-top:15px;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid var(--border);
-    background:#142328;
-    font-size:14px;
+.status{
+  margin-top:10px;
+  padding:10px;
+  background:#142328;
+  border-radius:8px;
 }
 </style>
 </head>
-
 <body>
 
 <div class="container">
 
-<h1>🛠 Technician Work Panel</h1>
+<h2>🛠 Technician Panel</h2>
 
-<label>Employee ID</label>
-<input type="text" id="empId" placeholder="กรอกรหัสพนักงาน">
-
-<div class="header">
-<b>Status:</b> <span id="status">IDLE</span><br>
-<b>Current Task:</b> <span id="currentTask">-</span><br>
-<b>Timer:</b> <span id="timer">00:00:00</span>
+<div id="loginBox">
+  <input type="text" id="empId" placeholder="Employee ID">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
 </div>
 
-<div class="task-list" id="taskList">
-<b>Assigned Tasks</b>
-<div class="task-item">
-<input type="radio" name="task" value="TSK-001">
-<label>TSK-001 | Change Bearing | Plan 02:00</label>
-</div>
-<div class="task-item">
-<input type="radio" name="task" value="TSK-002">
-<label>TSK-002 | Clean Hopper | Plan 01:00</label>
-</div>
-<div class="task-item">
-<input type="radio" name="task" value="TSK-003">
-<label>TSK-003 | Sensor Replace | Plan 00:45</label>
-</div>
-</div>
+<div id="mainBox" style="display:none;">
+  <div class="status">
+    Status: <b id="statusText">IDLE</b>
+  </div>
 
-<button class="start" id="toggleBtn" onclick="toggleTask()">▶ START TASK</button>
+  <div id="taskList"></div>
 
-<button class="urgent" onclick="startUrgent()">🚨 START URGENT TASK</button>
-
-<div class="timer-box">
-<b>Performance:</b> <span id="performance">-</span>
+  <button class="start" onclick="startTask()">START</button>
+  <button class="stop" onclick="stopTask()">STOP</button>
+  <button class="complete" onclick="completeTask()">COMPLETE</button>
+  <button class="logout" onclick="logout()">LOGOUT</button>
 </div>
 
 </div>
 
 <script>
 
-let running=false;
-let timerInterval;
-let seconds=0;
-let activeTask=null;
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyYSSyAy8xQa5jINo-A7YHEPJY3DgRWeeB3C1lVmKwZKdgYJ-YESOP69CWCEmIrgBvmdQ/exec";
 
-function formatTime(sec){
-    const h=Math.floor(sec/3600);
-    const m=Math.floor((sec%3600)/60);
-    const s=sec%60;
-    return String(h).padStart(2,'0')+":"+
-           String(m).padStart(2,'0')+":"+
-           String(s).padStart(2,'0');
+let currentEmpId = null;
+
+/* ================= COOKIE HELPERS ================= */
+
+function setCookie(name,value,days){
+  const d = new Date();
+  d.setTime(d.getTime()+(days*24*60*60*1000));
+  document.cookie = name+"="+value+";expires="+d.toUTCString()+";path=/";
 }
 
-function toggleTask(){
-    if(!running){
-        const selected=document.querySelector('input[name="task"]:checked');
-        if(!selected){
-            alert("เลือก Task ก่อน");
-            return;
-        }
-        activeTask=selected.value;
-        running=true;
-        document.getElementById("status").innerText="RUNNING";
-        document.getElementById("currentTask").innerText=activeTask;
-        document.getElementById("toggleBtn").innerText="■ END TASK";
-        document.getElementById("toggleBtn").classList.remove("start");
-        document.getElementById("toggleBtn").classList.add("end");
+function getCookie(name){
+  const value = "; "+document.cookie;
+  const parts = value.split("; "+name+"=");
+  if(parts.length === 2) return parts.pop().split(";").shift();
+}
 
-        timerInterval=setInterval(()=>{
-            seconds++;
-            document.getElementById("timer").innerText=formatTime(seconds);
-        },1000);
+function deleteCookie(name){
+  document.cookie = name+'=; Max-Age=-99999999;';
+}
+
+/* ================= AUTO LOGIN ================= */
+
+window.onload = function(){
+  const savedEmp = getCookie("empId");
+  if(savedEmp){
+    currentEmpId = savedEmp;
+    showMain();
+    loadTasks();
+  }
+};
+
+/* ================= LOGIN ================= */
+
+function login(){
+
+  fetch(WEBAPP_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"login",
+      empId:document.getElementById("empId").value,
+      password:document.getElementById("password").value
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+
+    if(data.status==="success" && data.role==="technician"){
+
+      currentEmpId = data.empId;
+      setCookie("empId", data.empId, 30); // จำ 30 วัน
+
+      showMain();
+      loadTasks();
 
     }else{
-        clearInterval(timerInterval);
-        running=false;
-        document.getElementById("status").innerText="IDLE";
-        document.getElementById("currentTask").innerText="-";
-        document.getElementById("toggleBtn").innerText="▶ START TASK";
-        document.getElementById("toggleBtn").classList.add("start");
-        document.getElementById("toggleBtn").classList.remove("end");
-        seconds=0;
-        document.getElementById("timer").innerText="00:00:00";
+      alert("Login Failed");
     }
+
+  });
 }
 
-function startUrgent(){
-    if(running){
-        toggleTask();
-    }
-    activeTask="URG-"+Date.now();
-    running=true;
-    document.getElementById("status").innerText="RUNNING (URGENT)";
-    document.getElementById("currentTask").innerText=activeTask;
-    document.getElementById("toggleBtn").innerText="■ END TASK";
-    document.getElementById("toggleBtn").classList.remove("start");
-    document.getElementById("toggleBtn").classList.add("end");
+function showMain(){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("mainBox").style.display="block";
+}
 
-    timerInterval=setInterval(()=>{
-        seconds++;
-        document.getElementById("timer").innerText=formatTime(seconds);
-    },1000);
+/* ================= LOAD TASKS ================= */
+
+function loadTasks(){
+
+  fetch(`${WEBAPP_URL}?action=getTasks&empId=${currentEmpId}`)
+  .then(res=>res.json())
+  .then(data=>{
+
+    const taskList=document.getElementById("taskList");
+    taskList.innerHTML="<h4>Assigned Tasks</h4>";
+
+    data.forEach(task=>{
+    taskList.innerHTML+=`
+  <div class="task-item" style="flex-direction:column;align-items:flex-start;margin-bottom:10px;">
+    <div style="display:flex;align-items:flex-start;gap:8px;">
+      <input type="radio" name="task" value="${task.empTaskId}">
+      <div>
+        <div style="font-weight:bold;font-size:15px;">
+          ${task.taskId}
+        </div>
+        <div style="font-size:13px;opacity:0.9;">
+          ${task.detail || ""}
+        </div>
+        <div style="font-size:12px;opacity:0.6;">
+          Plan: ${task.planDuration} hr | ${task.status}
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+    });
+
+  });
+}
+
+/* ================= ACTIONS ================= */
+
+function getSelectedTask(){
+  const selected=document.querySelector('input[name="task"]:checked');
+  if(!selected){
+    alert("เลือก Task ก่อน");
+    return null;
+  }
+  return selected.value;
+}
+
+function sendAction(type){
+
+  const empTaskId=getSelectedTask();
+  if(!empTaskId) return;
+
+  fetch(WEBAPP_URL,{
+    method:"POST",
+    body:JSON.stringify({
+    action:"logAction",
+    empTaskId:empTaskId,
+    taskAction:type
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.error){
+      alert(data.error);
+    }else{
+      document.getElementById("statusText").innerText=type;
+      loadTasks();
+    }
+  });
+}
+
+function startTask(){ sendAction("START"); }
+function stopTask(){ sendAction("STOP"); }
+function completeTask(){
+
+  if(!confirm("ยืนยัน COMPLETE ?")) return;
+  sendAction("COMPLETE");
+}
+
+/* ================= LOGOUT ================= */
+
+function logout(){
+  deleteCookie("empId");
+  location.reload();
 }
 
 </script>
-
 </body>
 </html>
