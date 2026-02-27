@@ -116,7 +116,16 @@ button{
       <div class="status">
         Status: <b id="statusText">IDLE</b>
       </div>
-    
+      <h4 style="margin-top:20px;">📊 Daily Plan Timeline</h4>
+        <div id="gantt" style="
+          position:relative;
+          height:80px;
+          background:#142328;
+          border-radius:10px;
+          margin-bottom:20px;
+          overflow:hidden;
+        ">
+        </div>
       <h3>Assigned Tasks</h3>
       <div id="taskList"></div>
     
@@ -212,25 +221,25 @@ function loadTasks(){
 
     data.forEach(task=>{
     taskList.innerHTML+=`
-  <div class="task-item" style="flex-direction:column;align-items:flex-start;margin-bottom:10px;">
-    <div style="display:flex;align-items:flex-start;gap:8px;">
-      <input type="radio" name="task" value="${task.empTaskId}">
-      <div>
-        <div style="font-weight:bold;font-size:15px;">
-          ${task.taskId}
-        </div>
-        <div style="font-size:13px;opacity:0.9;">
-          ${task.detail || ""}
-        </div>
-        <div style="font-size:12px;opacity:0.6;">
-          Plan: ${task.planDuration} hr | ${task.status}
+      <div class="task-item" style="flex-direction:column;align-items:flex-start;margin-bottom:10px;">
+        <div style="display:flex;align-items:flex-start;gap:8px;">
+          <input type="radio" name="task" value="${task.empTaskId}">
+          <div>
+            <div style="font-weight:bold;font-size:15px;">
+              ${task.taskId}
+            </div>
+            <div style="font-size:13px;opacity:0.9;">
+              ${task.detail || ""}
+            </div>
+            <div style="font-size:12px;opacity:0.6;">
+              Plan: ${task.planDuration} hr | ${task.status}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-`;
+    `;
     });
-
+drawGantt(data);
   });
 }
 
@@ -277,6 +286,86 @@ function completeTask(){
   sendAction("COMPLETE");
 }
 
+function timeToMin(dateObj){
+  return dateObj.getHours()*60 + dateObj.getMinutes();
+}
+
+function percentOfDay(min){
+  const startDay = 8*60;   // 08:00
+  const endDay   = 17*60;  // 17:00
+  return ((min - startDay) / (endDay - startDay)) * 100;
+}
+
+function drawGantt(tasks){
+
+  const gantt = document.getElementById("gantt");
+  gantt.innerHTML = "";
+
+  tasks.forEach(task=>{
+
+    const start = new Date(task.planStart);
+    const end   = new Date(task.planEnd);
+
+    const startMin = timeToMin(start);
+    const endMin   = timeToMin(end);
+
+    const left = percentOfDay(startMin);
+    const width = percentOfDay(endMin) - left;
+
+    // ===== PLAN BLOCK =====
+    const planBlock = document.createElement("div");
+    planBlock.style.position="absolute";
+    planBlock.style.left = left + "%";
+    planBlock.style.width = width + "%";
+    planBlock.style.height="40px";
+    planBlock.style.top="20px";
+    planBlock.style.background="#d4a373";
+    planBlock.style.borderRadius="6px";
+    planBlock.style.opacity="0.4";
+
+    gantt.appendChild(planBlock);
+
+    // ===== RUNTIME BLOCK =====
+    const actualMin = task.actualMin || 0;
+    const planMin = (task.planDuration || 0) * 60;
+
+    if(planMin > 0 && actualMin > 0){
+
+      const runtimeWidth =
+        (actualMin / planMin) * width;   // 👈 ใส่ตรงนี้
+
+      const runBlock = document.createElement("div");
+      runBlock.style.position="absolute";
+      runBlock.style.left = left + "%";
+      runBlock.style.width = runtimeWidth + "%";
+      runBlock.style.height="40px";
+      runBlock.style.top="20px";
+      runBlock.style.background="#2ecc71";
+      runBlock.style.borderRadius="6px";
+
+      gantt.appendChild(runBlock);
+    }
+
+    // ===== LABEL =====
+    const label = document.createElement("div");
+    label.style.position="absolute";
+    label.style.left = left + "%";
+    label.style.width = width + "%";
+    label.style.height="40px";
+    label.style.top="20px";
+    label.style.display="flex";
+    label.style.alignItems="center";
+    label.style.justifyContent="center";
+    label.style.fontSize="11px";
+    label.style.fontWeight="bold";
+    label.style.color="#000";
+    label.innerText = task.taskId;
+
+    gantt.appendChild(label);
+
+  });
+}
+    
 /* ================= LOGOUT ================= */
 
 function logout(){
@@ -290,6 +379,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
