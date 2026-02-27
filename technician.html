@@ -189,8 +189,9 @@ function login(){
 }
 
 function showMain(){
-  document.getElementById("loginBox").style.display="none";
-  document.getElementById("mainBox").style.display="block";
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("mainBox").classList.remove("hidden");
+  document.getElementById("pageTitle").innerText = "🛠 Technician Panel";
 }
 
 /* ================= LOAD TASKS ================= */
@@ -282,4 +283,5 @@ function logout(){
 </body>
 
 </html>
+
 
