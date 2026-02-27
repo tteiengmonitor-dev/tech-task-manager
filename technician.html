@@ -6,63 +6,82 @@
 <title>Technician Panel</title>
 
 <style>
+:root{
+    --bg1:#0f2027;
+    --bg2:#203a43;
+    --card:#1e2e34;
+    --accent:#d4a373;
+    --text:#f1f1f1;
+    --border:#35565f;
+}
+
 body{
-  margin:0;
-  font-family:Segoe UI,sans-serif;
-  background:#0f2027;
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  padding:30px;
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+    color:var(--text);
 }
+
 .container{
-  width:100%;
-  max-width:800px;
-  background:#1e2e34;
-  padding:25px;
-  border-radius:15px;
+    width:100%;
+    max-width:800px;
+    background:var(--card);
+    padding:28px;
+    border-radius:12px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.4);
 }
+
+h1{
+    color:var(--accent);
+    margin-top:0;
+}
+
+label{
+    display:block;
+    margin-top:14px;
+    font-weight:600;
+    font-size:13px;
+}
+
 input[type="text"],
 input[type="password"]{
-  width:100%;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:8px;
-  border:1px solid #35565f;
-  background:#142328;
-  color:#fff;
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    background:#142328;
+    color:var(--text);
+    font-size:14px;
+    box-sizing:border-box;
 }
+
 button{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-  margin-top:8px;
-}
-.start{background:#d4a373;color:#000;}
-.stop{background:#f1c40f;color:#000;}
-.complete{background:#2ecc71;color:#000;}
-.logout{background:#c44536;color:#fff;}
-.task-item{
-  display:flex;
-  align-items:center;
-  gap:8px;
+    margin-top:10px;
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
 }
 
-.task-item input[type="radio"]{
-  margin:0;
-}
-
-.task-item label{
-  margin:0;
-}
+.primary{ background:var(--accent); color:#000; }
+.start{ background:var(--accent); color:#000; }
+.stop{ background:#f1c40f; color:#000; }
+.complete{ background:#2ecc71; color:#000; }
+.logout{ background:#444; color:#fff; }
 
 .status{
-  margin-top:10px;
-  padding:10px;
-  background:#142328;
-  border-radius:8px;
+    margin-top:15px;
+    padding:12px;
+    background:#142328;
+    border-radius:10px;
+    font-size:13px;
 }
 </style>
 </head>
@@ -250,4 +269,5 @@ function logout(){
 
 </script>
 </body>
+
 </html>
