@@ -36,6 +36,10 @@ body{
     box-shadow:0 8px 25px rgba(0,0,0,0.4);
 }
 
+.hidden{
+  display:none;
+}
+    
 h1{
     color:var(--accent);
     margin-top:0;
@@ -89,37 +93,38 @@ button{
 
 <div class="container">
 
-  <h1 id="pageTitle">🔐 Login</h1>
-
-  <!-- LOGIN BOX -->
-  <div id="loginBox">
-
-    <label>Employee ID</label>
-    <input type="text" id="empId">
-
-    <label>Password</label>
-    <input type="password" id="password">
-
-    <button class="primary" onclick="login()">Login</button>
-
-  </div>
-
-  <!-- MAIN PANEL -->
-  <div id="mainBox" class="hidden">
-
-    <button class="logout" onclick="logout()">Logout</button>
-
-    <div class="status">
-      Status: <b id="statusText">IDLE</b>
+    <h1 id="pageTitle">🔐 Login</h1>
+    
+    <!-- LOGIN SECTION -->
+    <div id="loginSection">
+    
+      <label>Employee ID</label>
+      <input type="text" id="empId">
+    
+      <label>Password</label>
+      <input type="password" id="password">
+    
+      <button class="primary" onclick="login()">Login</button>
+    
     </div>
-
-    <div id="taskList"></div>
-
-    <button class="start" onclick="startTask()">START</button>
-    <button class="stop" onclick="stopTask()">STOP</button>
-    <button class="complete" onclick="completeTask()">COMPLETE</button>
-
-  </div>
+    
+    <!-- WORK SECTION -->
+    <div id="workSection" class="hidden">
+    
+      <button class="logout" onclick="logout()">Logout</button>
+    
+      <div class="status">
+        Status: <b id="statusText">IDLE</b>
+      </div>
+    
+      <h3>Assigned Tasks</h3>
+      <div id="taskList"></div>
+    
+      <button class="start" onclick="startTask()">START</button>
+      <button class="stop" onclick="stopTask()">STOP</button>
+      <button class="complete" onclick="completeTask()">COMPLETE</button>
+    
+    </div>
 
 </div>
 
@@ -189,8 +194,8 @@ function login(){
 }
 
 function showMain(){
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("mainBox").classList.remove("hidden");
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("workSection").classList.remove("hidden");
   document.getElementById("pageTitle").innerText = "🛠 Technician Panel";
 }
 
@@ -275,13 +280,16 @@ function completeTask(){
 /* ================= LOGOUT ================= */
 
 function logout(){
-  deleteCookie("empId");
-  location.reload();
+  localStorage.removeItem("empId");
+  document.getElementById("workSection").classList.add("hidden");
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("pageTitle").innerText = "🔐 Login";
 }
 
 </script>
 </body>
 
 </html>
+
 
 
