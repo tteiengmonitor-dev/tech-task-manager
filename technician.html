@@ -169,6 +169,8 @@ window.onload = function(){
     currentEmpId = savedEmp;
     showMain();
     loadTasks();
+
+    setInterval(loadTasks, 30000); // 👈 ใส่ตรงนี้
   }
 };
 
@@ -379,6 +381,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
