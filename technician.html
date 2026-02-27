@@ -178,14 +178,18 @@ window.onload = function(){
 
 function login(){
 
-  fetch(WEBAPP_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      action:"login",
-      empId:document.getElementById("empId").value,
-      password:document.getElementById("password").value
+    fetch(WEBAPP_URL,{
+      method:"POST",
+      mode:"cors",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        action:"logAction",
+        empTaskId:empTaskId,
+        taskAction:type
+      })
     })
-  })
   .then(res=>res.json())
   .then(data=>{
 
@@ -386,6 +390,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
