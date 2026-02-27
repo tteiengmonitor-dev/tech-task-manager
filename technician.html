@@ -89,26 +89,37 @@ button{
 
 <div class="container">
 
-<h2>🛠 Technician Panel</h2>
+  <h1 id="pageTitle">🔐 Login</h1>
 
-<div id="loginBox">
-  <input type="text" id="empId" placeholder="Employee ID">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
+  <!-- LOGIN BOX -->
+  <div id="loginBox">
 
-<div id="mainBox" style="display:none;">
-  <div class="status">
-    Status: <b id="statusText">IDLE</b>
+    <label>Employee ID</label>
+    <input type="text" id="empId">
+
+    <label>Password</label>
+    <input type="password" id="password">
+
+    <button class="primary" onclick="login()">Login</button>
+
   </div>
 
-  <div id="taskList"></div>
+  <!-- MAIN PANEL -->
+  <div id="mainBox" class="hidden">
 
-  <button class="start" onclick="startTask()">START</button>
-  <button class="stop" onclick="stopTask()">STOP</button>
-  <button class="complete" onclick="completeTask()">COMPLETE</button>
-  <button class="logout" onclick="logout()">LOGOUT</button>
-</div>
+    <button class="logout" onclick="logout()">Logout</button>
+
+    <div class="status">
+      Status: <b id="statusText">IDLE</b>
+    </div>
+
+    <div id="taskList"></div>
+
+    <button class="start" onclick="startTask()">START</button>
+    <button class="stop" onclick="stopTask()">STOP</button>
+    <button class="complete" onclick="completeTask()">COMPLETE</button>
+
+  </div>
 
 </div>
 
@@ -271,3 +282,4 @@ function logout(){
 </body>
 
 </html>
+
