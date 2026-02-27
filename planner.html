@@ -204,11 +204,27 @@ const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyYSSyAy8xQa5jINo-A7
 
 let lastChanged=null;
 
+function setCookie(name,value,days){
+  const d = new Date();
+  d.setTime(d.getTime()+(days*24*60*60*1000));
+  document.cookie = name+"="+value+";expires="+d.toUTCString()+";path=/";
+}
+
+function getCookie(name){
+  const value = "; "+document.cookie;
+  const parts = value.split("; "+name+"=");
+  if(parts.length === 2) return parts.pop().split(";").shift();
+}
+
+function deleteCookie(name){
+  document.cookie = name+'=; Max-Age=-99999999;';
+}    
+    
 // ================= INIT =================
 window.onload = () => {
 
-  const empId = sessionStorage.getItem("empId");
-  const role = sessionStorage.getItem("role");
+  const empId = getCookie("empId");
+  const role  = getCookie("role");
 
   if(empId && role === "planner"){
     showPlanner();
@@ -236,8 +252,8 @@ function login(){
         return;
       }
 
-      sessionStorage.setItem("empId",data.empId);
-      sessionStorage.setItem("role",data.role);
+        setCookie("empId", data.empId, 30);
+        setCookie("role", data.role, 30);
       showPlanner();
     }else{
       alert("Login Failed");
@@ -252,7 +268,8 @@ function showPlanner(){
 }
 
 function logout(){
-  sessionStorage.clear();
+  deleteCookie("empId");
+  deleteCookie("role");
   location.reload();
 }
 
@@ -411,4 +428,5 @@ function submitPlan(){
 </script>
 
 </body>
+
 </html>
