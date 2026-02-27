@@ -208,7 +208,7 @@ function loadTasks(){
   .then(data=>{
 
     const taskList=document.getElementById("taskList");
-    taskList.innerHTML="<h4>Assigned Tasks</h4>";
+    taskList.innerHTML="";
 
     data.forEach(task=>{
     taskList.innerHTML+=`
@@ -290,6 +290,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
