@@ -226,9 +226,9 @@ window.onload = () => {
   const empId = getCookie("empId");
   const role  = getCookie("role");
 
-  if(empId && role === "planner"){
-    showPlanner();
-  }
+  if(!empId || role !== "planner"){
+  return;
+}
 
   setTomorrow();
 };
@@ -268,9 +268,12 @@ function showPlanner(){
 }
 
 function logout(){
-  deleteCookie("empId");
-  deleteCookie("role");
-  location.reload();
+
+  sessionStorage.removeItem("empId");
+  sessionStorage.removeItem("role");
+
+  location.href = "index.html";
+
 }
 
 // ================= DATE =================
@@ -430,3 +433,4 @@ function submitPlan(){
 </body>
 
 </html>
+
