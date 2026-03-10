@@ -142,6 +142,7 @@ button{
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyYSSyAy8xQa5jINo-A7YHEPJY3DgRWeeB3C1lVmKwZKdgYJ-YESOP69CWCEmIrgBvmdQ/exec";
 
 let currentEmpId = null;
+let refreshTimer = null;
 
 /* ================= COOKIE HELPERS ================= */
 
@@ -198,7 +199,9 @@ function login(){
       showMain();
       loadTasks();
 
-      setInterval(loadTasks,30000);
+      if(!refreshTimer){
+          refreshTimer = setInterval(loadTasks,30000);
+      }
 
     }else{
       alert("Login Failed");
@@ -266,15 +269,12 @@ function sendAction(type){
   if(!empTaskId) return;
 
   fetch(WEBAPP_URL,{
-  method:"POST",
-  headers:{
-    "Content-Type":"application/x-www-form-urlencoded"
-  },
-  body: new URLSearchParams({
-    action:"logAction",
-    empTaskId:empTaskId,
-    taskAction:type
-      })
+    method:"POST",
+    body:new URLSearchParams({
+      action:"logAction",
+      empTaskId:empTaskId,
+      taskAction:type
+    })
   })
   .then(res=>res.json())
   .then(data=>{
@@ -393,6 +393,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
