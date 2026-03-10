@@ -223,12 +223,12 @@ function deleteCookie(name){
 // ================= INIT =================
 window.onload = () => {
 
-  const empId = getCookie("empId");
-  const role  = getCookie("role");
+  const empId = sessionStorage.getItem("empId");
+  const role  = sessionStorage.getItem("role");
 
-  if(!empId || role !== "planner"){
-  return;
-}
+  if(empId && role === "planner"){
+    showPlanner();
+  }
 
   setTomorrow();
 };
@@ -252,8 +252,8 @@ function login(){
         return;
       }
 
-        setCookie("empId", data.empId, 30);
-        setCookie("role", data.role, 30);
+        sessionStorage.setItem("empId", data.empId);
+        sessionStorage.setItem("role", data.role);
       showPlanner();
     }else{
       alert("Login Failed");
@@ -433,4 +433,5 @@ function submitPlan(){
 </body>
 
 </html>
+
 
