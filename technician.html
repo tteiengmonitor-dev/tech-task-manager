@@ -180,10 +180,7 @@ function login(){
 
   fetch(WEBAPP_URL,{
     method:"POST",
-    headers:{
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    body:new URLSearchParams({
+    body:JSON.stringify({
       action:"login",
       empId:document.getElementById("empId").value,
       password:document.getElementById("password").value
@@ -195,6 +192,7 @@ function login(){
     if(data.status==="success" && data.role==="technician"){
 
       currentEmpId = data.empId;
+
       setCookie("empId", data.empId, 30);
 
       showMain();
@@ -395,6 +393,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
