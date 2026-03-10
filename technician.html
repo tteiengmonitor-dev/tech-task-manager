@@ -178,34 +178,37 @@ window.onload = function(){
 
 function login(){
 
-    fetch(WEBAPP_URL,{
-      method:"POST",
-      mode:"cors",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        action:"logAction",
-        empTaskId:empTaskId,
-        taskAction:type
-      })
+  fetch(WEBAPP_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      action:"login",
+      empId:document.getElementById("empId").value,
+      password:document.getElementById("password").value
     })
+  })
   .then(res=>res.json())
   .then(data=>{
 
     if(data.status==="success" && data.role==="technician"){
 
       currentEmpId = data.empId;
-      setCookie("empId", data.empId, 30); // จำ 30 วัน
+
+      setCookie("empId", data.empId, 30);
 
       showMain();
       loadTasks();
+
+      setInterval(loadTasks, 30000);
 
     }else{
       alert("Login Failed");
     }
 
   });
+
 }
 
 function showMain(){
@@ -383,7 +386,7 @@ function drawGantt(tasks){
 /* ================= LOGOUT ================= */
 
 function logout(){
-  localStorage.removeItem("empId");
+  deleteCookie("empId");
   document.getElementById("workSection").classList.add("hidden");
   document.getElementById("loginSection").classList.remove("hidden");
   document.getElementById("pageTitle").innerText = "🔐 Login";
@@ -393,6 +396,7 @@ function logout(){
 </body>
 
 </html>
+
 
 
 
